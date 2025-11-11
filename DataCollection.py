@@ -5,6 +5,9 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
 # Sample data: Customer reviews
 data = {
     'review': [
@@ -40,3 +43,16 @@ def preprocess_text(text):
 # Apply preprocessing to the DataFrame
 df['cleaned_review'] = df['review'].apply(preprocess_text)
 print(df[['review', 'cleaned_review']])
+
+#model selection
+
+# Convert text data to numerical features
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(df['cleaned_review'])
+y = df['sentiment']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Select the logistic regression model
+model = LogisticRegression()
